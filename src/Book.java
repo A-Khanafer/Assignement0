@@ -21,6 +21,21 @@ public class Book {
         this.price = 0.0;
         bookCount++;
     }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setISBN(long ISBN) {
+        this.ISBN = ISBN;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public String getTitle() {
         return title;

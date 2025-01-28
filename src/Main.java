@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -7,13 +6,11 @@ public class Main {
     private static final String PASSWORD = "249";
     private static final int MAX_ATTEMPTS = 3;
     private static final int MAX_TOTAL_ATTEMPTS = 12;
-    private static int failedAttemtps = 0;
-    private static boolean ACCESS_GRANTED = false;
+    private static int failedAttempts = 0;
+    private static boolean accessGranted = false;
 
 
     public static void main(String[] args) {
-
-
 
         System.out.println("Hello and Welcome.");
         System.out.println("Book Max");
@@ -25,21 +22,21 @@ public class Main {
             switch (displayMenu()) {
                 case 1:
                     security();
-                    if(ACCESS_GRANTED) {
+                    if(accessGranted) {
                         addBook(inventory);
                     }
                 break;
                 case 2:
                     security();
-                    if(ACCESS_GRANTED) {
-
+                    if(accessGranted) {
+                        modifyBook(inventory);
                     }
                 break;
                 case 3:
-
+                    searchByAuthor(inventory);
                 break;
                 case 4:
-
+                    searchUnderPrice(inventory);
                 break;
                 case 5:
                     quit = true;
@@ -52,8 +49,6 @@ public class Main {
         }
 
     }
-
-
 
     private static int displayMenu(){
         System.out.println("What do you want to do?\n" +
@@ -68,23 +63,23 @@ public class Main {
 
     private static void security(){
         int failedTriesInOneGo = 0;
-        if(failedAttemtps != MAX_TOTAL_ATTEMPTS) {
+        if(failedAttempts != MAX_TOTAL_ATTEMPTS) {
 
             while (failedTriesInOneGo < MAX_ATTEMPTS) {
                 System.out.println("Please enter your password");
                 String password = scanner.next();
                 if (password.equals(PASSWORD)) {
-                    ACCESS_GRANTED = true;
+                    accessGranted = true;
                     break;
                 }else {
                     System.out.println("Invalid password");
                     failedTriesInOneGo++;
-                    failedAttemtps++;
+                    failedAttempts++;
                 }
             }
 
         }
-        if(failedAttemtps == MAX_TOTAL_ATTEMPTS){
+        if(failedAttempts == MAX_TOTAL_ATTEMPTS){
             System.out.println("Program detected suspicious activities and will terminate immediately.");
             System.exit(0);
         }
@@ -97,6 +92,7 @@ public class Main {
         for (int i = 0; i < inventory.length; i++) {
             if(inventory[i] == null) {
                 unusedSpace++;
+
             }
         }
 
@@ -110,7 +106,7 @@ public class Main {
         }else{
             System.out.println("Sorry no more Space available.");
         }
-        ACCESS_GRANTED = false;
+        accessGranted = false;
     }
 
     private static void modifyBook(Book[] inventory){
@@ -118,21 +114,84 @@ public class Main {
         int bookIndex = scanner.nextInt();
 
         if( bookIndex < inventory.length && inventory[bookIndex] != null) {
-            System.out.println("What information would you like to change?\n" +
-                    "1. author\n" +
-                    "2. title\n" +
-                    "3. ISBN\n" +
-                    "4. price\n" +
-                    "5. Quit\n" +
-                    "Enter your choice >");
-            byte attribute = scanner.nextByte();
+            System.out.println(inventory[bookIndex]);
+            boolean quit = false;
 
-            switch (attribute) {
-                case 1:
+            while(!quit) {
+                System.out.println("What information would you like to change?\n" +
+                        "1. author\n" +
+                        "2. title\n" +
+                        "3. ISBN\n" +
+                        "4. price\n" +
+                        "5. Quit\n" +
+                        "Enter your choice >");
+                byte attribute = scanner.nextByte();
 
+                switch (attribute) {
+                    case 1:
+                        System.out.println("New author : ");
+                        inventory[bookIndex].setAuthor(scanner.next());
+                        System.out.println(inventory[bookIndex]);
+                        break;
+                    case 2:
+                        System.out.println("New Title : ");
+                        inventory[bookIndex].setTitle(scanner.next());
+                        System.out.println(inventory[bookIndex]);
+                        break;
+                    case 3:
+                        System.out.println("New ISBN : ");
+                        inventory[bookIndex].setISBN(scanner.nextLong());
+                        System.out.println(inventory[bookIndex]);
+                        break;
+                    case 4:
+                        System.out.println("New Price : ");
+                        inventory[bookIndex].setPrice(scanner.nextDouble());
+                        System.out.println(inventory[bookIndex]);
+                        break;
+                    case 5:
+                        quit = true;
+                        break;
+                    default:
+                        System.out.println("Invalid choice");
+                        break;
+                }
             }
+        }else{
+            System.out.println("Sorry no more Space available.");
+        }
 
+        accessGranted = false;
+    }
 
+    private static void searchByAuthor(Book[] inventory) {
+        System.out.println("Enter the Author");
+        String author = scanner.next();
+        Book[] allBooksBySameAuthor = new Book[inventory.length];
+        int i = 0;
+        for(Book book : inventory) {
+            if(  book!= null && book.getAuthor().equals(author)) {
+                allBooksBySameAuthor[i++] = book;
+            }
+        }
+
+        for(Book book : allBooksBySameAuthor) {
+            System.out.println(book);
+        }
+    }
+
+    private static void searchUnderPrice(Book[] inventory) {
+        System.out.println("Enter the Price");
+        double price = scanner.nextDouble();
+        Book[] allBookUnderPrice = new Book[inventory.length];
+        int i = 0;
+        for(Book book : inventory) {
+            if(  book!= null && book.getPrice() == price) {
+                allBookUnderPrice[i++] = book;
+            }
+        }
+
+        for(Book book : allBookUnderPrice) {
+            System.out.println(book);
         }
     }
 }
